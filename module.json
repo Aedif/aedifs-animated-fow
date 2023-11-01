@@ -2,12 +2,12 @@
   "id": "aedifs-animated-fow",
   "title": "Aedif's Animated Fog of War",
   "description": "Make fog of war, actual fog of war.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "manifest": "https://drive.google.com/uc?export=download&id=1g2pogsSaDkeIf2poP-Ssb_JFjVHwXwl4",
   "download": "https://drive.google.com/uc?export=download&id=1IIO2o9cCkNo0MOQGGmImCdF-KhfOabzZ",
   "compatibility": {
-    "minimum": 10,
-    "verified": "11.306"
+    "minimum": 11.313,
+    "verified": "11.313"
   },
   "authors": [
     {

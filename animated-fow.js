@@ -50,6 +50,7 @@ Hooks.on('renderSceneConfig', (app) => {
 
   $(app.form).find('[name="fogOverlay"]').closest('.form-group').after(controls);
   $(app.form).find('.filterEdit').on('click', showFilterEdit);
+  app.setPosition();
 });
 
 function showFilterEdit(event) {
@@ -87,6 +88,7 @@ function showFilterEdit(event) {
 
 async function applyFilters(sceneId) {
   if (!canvas.scene?.id === sceneId) return;
+  if (!TokenMagic.filterTypes) return;
 
   if (canvas.effects?.visibility?.filters) {
     let filters = [];
@@ -134,7 +136,7 @@ async function applyFilters(sceneId) {
     params.filterOwner = gms.length ? gms[0].id : game.data.userId;
     params.updateId = randomID();
 
-    const filterClass = await getTMFXFilter(params.filterType);
+    const filterClass = TokenMagic.filterTypes()?.[params.filterType];
     if (filterClass) {
       filterClass.prototype.assignPlaceable = function () {
         this.targetPlaceable = canvas.effects;
@@ -162,25 +164,15 @@ Hooks.on('updateScene', (scene, change) => {
   if (change.flags?.['aedifs-animated-fow']) applyFilters(scene.id);
 });
 
-Hooks.on('drawCanvasVisibility', async () => {
+Hooks.on('ready', () => {
+  Hooks.once('drawCanvasVisibility', async () => {
+    applyFilters(canvas.scene.id);
+  });
   applyFilters(canvas.scene.id);
 });
 
 async function getTMFXFilter(id) {
-  if (id in TMFXFilterTypes) {
-    if (id in LOADED_TMFXFilters) return LOADED_TMFXFilters[id];
-    else {
-      try {
-        const className = TMFXFilterTypes[id];
-        let fxModule = await import(`../tokenmagic/fx/filters/${className}.js`);
-        if (fxModule && fxModule[className]) {
-          LOADED_TMFXFilters[id] = fxModule[className];
-          return fxModule[className];
-        }
-      } catch (e) {}
-    }
-  }
-  return null;
+  return TokenMagic.filterTypes()?.[id];
 }
 
 const LOADED_TMFXFilters = {};
