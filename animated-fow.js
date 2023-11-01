@@ -88,7 +88,7 @@ function showFilterEdit(event) {
 
 async function applyFilters(sceneId) {
   if (!canvas.scene?.id === sceneId) return;
-  if (!TokenMagic.filterTypes) return;
+  if (!('filterTypes' in TokenMagic)) return;
 
   if (canvas.effects?.visibility?.filters) {
     let filters = [];
@@ -136,7 +136,7 @@ async function applyFilters(sceneId) {
     params.filterOwner = gms.length ? gms[0].id : game.data.userId;
     params.updateId = randomID();
 
-    const filterClass = TokenMagic.filterTypes()?.[params.filterType];
+    const filterClass = TokenMagic.filterTypes?.[params.filterType];
     if (filterClass) {
       filterClass.prototype.assignPlaceable = function () {
         this.targetPlaceable = canvas.effects;
