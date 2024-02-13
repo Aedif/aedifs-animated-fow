@@ -165,6 +165,10 @@ Hooks.on('updateScene', (scene, change) => {
 });
 
 Hooks.on('ready', () => {
+  applyFilters(canvas.scene.id);
+});
+
+Hooks.on('canvasReady', () => {
   Hooks.once('drawCanvasVisibility', async () => {
     applyFilters(canvas.scene.id);
   });
